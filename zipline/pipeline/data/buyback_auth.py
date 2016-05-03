@@ -14,5 +14,5 @@ class BuybackAuthorizations(DataSet):
     """
     previous_value = Column(float64_dtype)
     previous_date = Column(datetime64ns_dtype)
-    previous_value_type = Column(categorical_dtype, missing_value="<<NONE>>")
-    previous_buyback_type = Column(categorical_dtype, missing_value="<<NONE>>")
+    previous_value_type = Column(categorical_dtype, missing_value=None)
+    previous_buyback_type = Column(categorical_dtype, missing_value=None)

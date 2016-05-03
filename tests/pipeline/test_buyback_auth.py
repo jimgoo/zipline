@@ -57,18 +57,6 @@ buyback_authorizations_cases = [
 ]
 
 
-def get_expected_previous_values(zip_date_index_with_vals,
-                                 dates,
-                                 vals_for_date_intervals):
-    return pd.DataFrame({
-        0: get_values_for_date_ranges(zip_date_index_with_vals,
-                                      vals_for_date_intervals,
-                                      date_intervals,
-                                      dates),
-        1: zip_date_index_with_vals(dates, ['NaN'] * len(dates)),
-    }, index=dates)
-
-
 class BuybackAuthLoaderTestCase(WithPipelineEventDataLoader, ZiplineTestCase):
     """
     Test for cash buyback authorizations dataset.
@@ -103,20 +91,35 @@ class BuybackAuthLoaderTestCase(WithPipelineEventDataLoader, ZiplineTestCase):
             PREVIOUS_VALUE: self.get_sids_to_frames(zip_with_floats,
                                                     [['NaN', 1, 15]],
                                                     date_intervals,
-                                                    dates),
+                                                    dates,
+                                                    'float',
+                                                    'NaN'),
             PREVIOUS_BUYBACK_ANNOUNCEMENT: self.get_sids_to_frames(
                 zip_with_dates,
                 [['NaT', '2014-01-04', '2014-01-09']],
                 date_intervals,
-                dates),
+                dates,
+                'datetime64[ns]',
+                'NaN'
+            ),
             PREVIOUS_VALUE_TYPE: self.get_sids_to_frames(
-                zip_with_strs, [["", "$M", "Mshares"]], date_intervals, dates
+                zip_with_strs,
+                [[None, "$M", "Mshares"]],
+                date_intervals,
+                dates,
+                'category',
+                None
             ),
             PREVIOUS_BUYBACK_TYPE: self.get_sids_to_frames(
-                zip_with_strs, [["", "New", "Additional"]], date_intervals,
-                dates
+                zip_with_strs,
+                [[None, "New", "Additional"]],
+                date_intervals,
+                dates,
+                'category',
+                None
             )
         }
+
         cols[DAYS_SINCE_PREV] = self._compute_busday_offsets(
             cols[PREVIOUS_BUYBACK_ANNOUNCEMENT]
         )
