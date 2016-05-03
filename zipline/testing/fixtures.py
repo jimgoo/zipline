@@ -887,7 +887,9 @@ class WithPipelineEventDataLoader(with_metaclass(
                            zip_date_index_with_vals,
                            vals,
                            date_intervals,
-                           dates):
+                           dates,
+                           dtype_name,
+                           missing_dtype):
         """
         Construct a DataFrame that maps sid to the expected values for the
         given dates.
@@ -914,10 +916,10 @@ class WithPipelineEventDataLoader(with_metaclass(
             pd.DatetimeIndex(list(zip(*date_intervals[sid]))[0]),
             pd.DatetimeIndex(list(zip(*date_intervals[sid]))[1]),
             dates
-        ) for sid in self.get_sids()[:-1]})
+        ).astype(dtype_name) for sid in self.get_sids()[:-1]})
         frame[self.get_sids()[-1]] = zip_date_index_with_vals(
-            dates, ['NaN'] * len(dates)
-        )
+            dates, [missing_dtype] * len(dates)
+        ).astype(dtype_name)
         return frame
 
     @staticmethod
@@ -1232,18 +1234,23 @@ class WithNextAndPreviousEventDataLoader(WithPipelineEventDataLoader):
         ['NaT']
     ]
 
-    def get_expected_previous_event_dates(self, dates):
+    def get_expected_previous_event_dates(self, dates, dtype_name,
+                                          missing_dtype):
         return self.get_sids_to_frames(
             zip_with_dates,
             self.prev_dates,
             self.prev_date_intervals,
-            dates
+            dates,
+            dtype_name,
+            missing_dtype
         )
 
-    def get_expected_next_event_dates(self, dates):
+    def get_expected_next_event_dates(self, dates, dtype_name, missing_dtype):
         return self.get_sids_to_frames(
             zip_with_dates,
             self.next_dates,
             self.next_date_intervals,
-            dates
+            dates,
+            dtype_name,
+            missing_dtype
         )
