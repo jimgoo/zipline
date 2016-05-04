@@ -16,7 +16,6 @@ from .events import (
 )
 from .technical import (
     AverageDollarVolume,
-    CorrelationFactor,
     EWMA,
     EWMSTD,
     ExponentialWeightedMovingAverage,
@@ -25,6 +24,7 @@ from .technical import (
     RSI,
     SingleRegressionFactor,
     Returns,
+    RollingPearsonOfReturns,
     SimpleMovingAverage,
     VWAP,
     WeightedAverageValue,
@@ -39,7 +39,6 @@ __all__ = [
     'BusinessDaysUntilNextEarnings',
     'BusinessDaysSincePreviousEarnings',
     'BusinessDaysSinceShareBuybackAuth',
-    'CorrelationFactor',
     'CustomFactor',
     'AverageDollarVolume',
     'EWMA',
@@ -51,6 +50,7 @@ __all__ = [
     'MaxDrawdown',
     'RSI',
     'RecarrayField',
+    'RollingPearsonOfReturns',
     'SingleRegressionFactor',
     'Returns',
     'SimpleMovingAverage',
