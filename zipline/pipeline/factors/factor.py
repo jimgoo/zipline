@@ -571,12 +571,14 @@ class Factor(RestrictedDTypeMixin, ComputableTerm):
         def zscore(row):
             return (row - nanmean(row)) / nanstd(row)
 
-        return GroupedRowTransform(
+        zscore_factor = GroupedRowTransform(
             transform=zscore,
             factor=self,
             mask=mask,
             groupby=groupby,
         )
+        zscore_factor.window_safe = True
+        return zscore_factor
 
     def rank(self, method='ordinal', ascending=True, mask=NotSpecified):
         """
@@ -989,6 +991,7 @@ class Rank(SingleInputMixin, Factor):
     """
     window_length = 0
     dtype = float64_dtype
+    window_safe = True
 
     def __new__(cls, factor, method, ascending, mask):
         return super(Rank, cls).__new__(
