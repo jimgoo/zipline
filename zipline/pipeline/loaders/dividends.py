@@ -1,8 +1,9 @@
 from zipline.pipeline.common import (
+    ANNOUNCEMENT_FIELD_NAME,
+    CASH_AMOUNT_FIELD_NAME,
+    CURRENCY_FIELD_NAME,
     EX_DATE_FIELD_NAME,
     PAY_DATE_FIELD_NAME,
-    CASH_AMOUNT_FIELD_NAME,
-    ANNOUNCEMENT_FIELD_NAME
 )
 from zipline.pipeline.loaders.events import EventsLoader
 from ..data import (
@@ -37,6 +38,13 @@ class DividendsByAnnouncementDateLoader(EventsLoader):
         return self._previous_event_value_loader(
             self.dataset.previous_amount,
             CASH_AMOUNT_FIELD_NAME
+        )
+
+    @lazyval
+    def previous_currency_loader(self):
+        return self._previous_event_value_loader(
+            self.dataset.previous_currency,
+            CURRENCY_FIELD_NAME
         )
 
 
@@ -75,6 +83,20 @@ class DividendsByPayDateLoader(EventsLoader):
             CASH_AMOUNT_FIELD_NAME
         )
 
+    @lazyval
+    def previous_currency_loader(self):
+        return self._previous_event_value_loader(
+            self.dataset.previous_currency,
+            CURRENCY_FIELD_NAME
+        )
+
+    @lazyval
+    def next_currency_loader(self):
+        return self._previous_event_value_loader(
+            self.dataset.next_currency,
+            CURRENCY_FIELD_NAME
+        )
+
 
 class DividendsByExDateLoader(EventsLoader):
     expected_cols = frozenset([EX_DATE_FIELD_NAME,
@@ -109,4 +131,18 @@ class DividendsByExDateLoader(EventsLoader):
         return self._previous_event_value_loader(
             self.dataset.previous_amount,
             CASH_AMOUNT_FIELD_NAME
+        )
+
+    @lazyval
+    def previous_currency_loader(self):
+        return self._previous_event_value_loader(
+            self.dataset.previous_currency,
+            CURRENCY_FIELD_NAME
+        )
+
+    @lazyval
+    def next_currency_loader(self):
+        return self._previous_event_value_loader(
+            self.dataset.next_currency,
+            CURRENCY_FIELD_NAME
         )
