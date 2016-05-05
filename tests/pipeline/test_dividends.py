@@ -24,7 +24,7 @@ from zipline.pipeline.common import (
     CASH_AMOUNT_FIELD_NAME,
     EX_DATE_FIELD_NAME,
     PAY_DATE_FIELD_NAME,
-    CURRENCY_FIELD_NAME)
+    CURRENCY_FIELD_NAME, NEXT_CURRENCY_TYPE)
 from zipline.pipeline.data.dividends import (
     DividendsByAnnouncementDate,
     DividendsByExDate,
@@ -48,6 +48,7 @@ from zipline.pipeline.loaders.dividends import (
 from zipline.pipeline.loaders.utils import (
     zip_with_dates,
     zip_with_floats,
+    zip_with_strs,
 )
 from zipline.testing.fixtures import (
     WithPipelineEventDataLoader,
@@ -61,7 +62,7 @@ dividends_cases = [
         EX_DATE_FIELD_NAME: pd.to_datetime(['2014-01-15', '2014-01-20']),
         PAY_DATE_FIELD_NAME: pd.to_datetime(['2014-01-15', '2014-01-20']),
         TS_FIELD_NAME: pd.to_datetime(['2014-01-05', '2014-01-10']),
-        ANNOUNCEMENT_FIELD_NAME: pd.to_datetime(['2014-01-04', '2014-01-09'])
+        ANNOUNCEMENT_FIELD_NAME: pd.to_datetime(['2014-01-04', '2014-01-09']),
         CURRENCY_FIELD_NAME: ["$", "EUR"]
     }),
     # K1--K2--A2--A1.
@@ -71,7 +72,7 @@ dividends_cases = [
         PAY_DATE_FIELD_NAME: pd.to_datetime(['2014-01-20', '2014-01-15']),
         TS_FIELD_NAME: pd.to_datetime(['2014-01-05', '2014-01-10']),
         ANNOUNCEMENT_FIELD_NAME: pd.to_datetime(['2014-01-04', '2014-01-09']),
-        CURRENCY_FIELD_NAME: ["$", "EUR"]
+        CURRENCY_FIELD_NAME: ["EUR", "$"]
     }),
     # K1--A1--K2--A2.
     pd.DataFrame({
@@ -169,7 +170,7 @@ prev_currency_types = [[None, "$", "EUR"],
                        [None, "$", "EUR"]]
 
 next_currency_types = [[None, "$", "EUR", None],
-                       [None, "$", "EUR", "$", None],
+                       [None, "EUR", "$", "EUR", None],
                        [None, "$", None, "EUR", None],
                        [None, "$", "EUR", None]]
 
@@ -233,7 +234,8 @@ class DividendsByAnnouncementDateTestCase(WithPipelineEventDataLoader,
                 zip_with_floats, amounts, date_intervals, dates, 'float', 'NaN'
             ),
             PREVIOUS_CURRENCY_TYPE: self.get_sids_to_frames(
-                zip_with_strs, currency_types, date_intervals, dates
+                zip_with_strs, currency_types, date_intervals, dates,
+                'category', None
             ),
         }
 
@@ -286,6 +288,8 @@ class DividendsByExDateTestCase(WithPipelineEventDataLoader, ZiplineTestCase):
         PREVIOUS_EX_DATE: DividendsByExDate.previous_date.latest,
         NEXT_AMOUNT: DividendsByExDate.next_amount.latest,
         PREVIOUS_AMOUNT: DividendsByExDate.previous_amount.latest,
+        PREVIOUS_CURRENCY_TYPE: DividendsByExDate.previous_currency.latest,
+        NEXT_CURRENCY_TYPE: DividendsByExDate.next_currency.latest,
         DAYS_TO_NEXT_EX_DATE: BusinessDaysUntilNextExDate(),
         DAYS_SINCE_PREV_EX_DATE: BusinessDaysSincePreviousExDate()
     }
@@ -319,6 +323,14 @@ class DividendsByExDateTestCase(WithPipelineEventDataLoader, ZiplineTestCase):
             PREVIOUS_AMOUNT: self.get_sids_to_frames(
                 zip_with_floats, prev_amounts, prev_date_intervals, dates,
                 'float', 'NaN'
+            ),
+            PREVIOUS_CURRENCY_TYPE: self.get_sids_to_frames(
+                zip_with_strs, prev_currency_types, prev_date_intervals, dates,
+                'category', None
+            ),
+            NEXT_CURRENCY_TYPE: self.get_sids_to_frames(
+                zip_with_strs, next_currency_types, next_date_intervals, dates,
+                'category', None
             )
         }
 
@@ -372,6 +384,8 @@ class DividendsByPayDateTestCase(WithPipelineEventDataLoader, ZiplineTestCase):
         PREVIOUS_PAY_DATE: DividendsByPayDate.previous_date.latest,
         NEXT_AMOUNT: DividendsByPayDate.next_amount.latest,
         PREVIOUS_AMOUNT: DividendsByPayDate.previous_amount.latest,
+        PREVIOUS_CURRENCY_TYPE: DividendsByPayDate.previous_currency.latest,
+        NEXT_CURRENCY_TYPE: DividendsByPayDate.next_currency.latest,
     }
 
     @classmethod
@@ -403,6 +417,14 @@ class DividendsByPayDateTestCase(WithPipelineEventDataLoader, ZiplineTestCase):
             PREVIOUS_AMOUNT: self.get_sids_to_frames(
                 zip_with_floats, prev_amounts, prev_date_intervals, dates,
                 'float', 'NaN'
+            ),
+            PREVIOUS_CURRENCY_TYPE: self.get_sids_to_frames(
+                zip_with_strs, prev_currency_types, prev_date_intervals, dates,
+                'category', None
+            ),
+            NEXT_CURRENCY_TYPE: self.get_sids_to_frames(
+                zip_with_strs, next_currency_types, next_date_intervals, dates,
+                'category', None
             )
         }
 

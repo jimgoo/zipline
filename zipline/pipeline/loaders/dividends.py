@@ -16,7 +16,8 @@ from zipline.utils.memoize import lazyval
 
 class DividendsByAnnouncementDateLoader(EventsLoader):
     expected_cols = frozenset([ANNOUNCEMENT_FIELD_NAME,
-                               CASH_AMOUNT_FIELD_NAME])
+                               CASH_AMOUNT_FIELD_NAME,
+                               CURRENCY_FIELD_NAME])
 
     event_date_col = ANNOUNCEMENT_FIELD_NAME
 
@@ -50,7 +51,8 @@ class DividendsByAnnouncementDateLoader(EventsLoader):
 
 class DividendsByPayDateLoader(EventsLoader):
     expected_cols = frozenset([PAY_DATE_FIELD_NAME,
-                               CASH_AMOUNT_FIELD_NAME])
+                               CASH_AMOUNT_FIELD_NAME,
+                               CURRENCY_FIELD_NAME])
 
     event_date_col = PAY_DATE_FIELD_NAME
 
@@ -92,7 +94,7 @@ class DividendsByPayDateLoader(EventsLoader):
 
     @lazyval
     def next_currency_loader(self):
-        return self._previous_event_value_loader(
+        return self._next_event_value_loader(
             self.dataset.next_currency,
             CURRENCY_FIELD_NAME
         )
@@ -100,7 +102,8 @@ class DividendsByPayDateLoader(EventsLoader):
 
 class DividendsByExDateLoader(EventsLoader):
     expected_cols = frozenset([EX_DATE_FIELD_NAME,
-                               CASH_AMOUNT_FIELD_NAME])
+                               CASH_AMOUNT_FIELD_NAME,
+                               CURRENCY_FIELD_NAME])
 
     event_date_col = EX_DATE_FIELD_NAME
 
@@ -142,7 +145,7 @@ class DividendsByExDateLoader(EventsLoader):
 
     @lazyval
     def next_currency_loader(self):
-        return self._previous_event_value_loader(
+        return self._next_event_value_loader(
             self.dataset.next_currency,
             CURRENCY_FIELD_NAME
         )
