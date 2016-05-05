@@ -127,8 +127,9 @@ Enhancements
   only defined for strings. (:issue:`1174`)
 
 * Added new built-in factors,
-  :class:`~zipline.pipeline.factors.CorrelationFactor` and
-  :class:`~zipline.pipeline.factors.SingleRegressionFactor`. (:issue:`1154`)
+  :class:`~zipline.pipeline.factors.RollingPearsonOfReturns`,
+  :class:`~zipline.pipeline.factors.RollingSpearmanOfReturns` and
+  :class:`~zipline.pipeline.factors.RollingRegressionOfReturns` (:issue:`1154`)
 
 Experimental Features
 ~~~~~~~~~~~~~~~~~~~~~
