@@ -312,13 +312,8 @@ def new_dataset(expr, deltas, missing_values):
         if name in (SID_FIELD_NAME, TS_FIELD_NAME):
             continue
         try:
-            # TODO: This should support datetime and bool columns.
-            if promote(type_, float64, promote_option=False) != float64:
-                raise NotPipelineCompatible()
             if isinstance(type_, Option):
                 type_ = type_.ty
-        except NotPipelineCompatible:
-            col = NonPipelineField(name, type_)
         except TypeError:
             col = NonNumpyField(name, type_)
         else:
