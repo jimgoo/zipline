@@ -314,14 +314,17 @@ def new_dataset(expr, deltas, missing_values):
         try:
             if isinstance(type_, Option):
                 type_ = type_.ty
-        except TypeError:
-            col = NonNumpyField(name, type_)
-        else:
+            type_ = type_.to_numpy_dtype()
+            if not isinstance(type_, String) and not can_represent_dtype(type_):
+                raise NotPipelineCompatible()
             col = Column(
-                type_.to_numpy_dtype(),
+                type_,
                 missing_values.get(name, NotSpecified),
             )
-
+        except NotPipelineCompatible:
+            col = NonPipelineField(name, type_)
+        except TypeError:
+            col = NonNumpyField(name, type_)
         columns[name] = col
 
     name = expr._name
