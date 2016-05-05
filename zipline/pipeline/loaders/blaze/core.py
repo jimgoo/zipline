@@ -137,11 +137,10 @@ from datashape import (
     Date,
     DateTime,
     Option,
-    float64,
     floating,
     isrecord,
     isscalar,
-    promote,
+    String
 )
 import numpy as np
 from odo import odo
@@ -170,7 +169,7 @@ from zipline.pipeline.loaders.utils import (
     normalize_timestamp_to_query_time,
 )
 from zipline.pipeline.term import NotSpecified
-from zipline.lib.adjusted_array import AdjustedArray
+from zipline.lib.adjusted_array import AdjustedArray, can_represent_dtype
 from zipline.lib.adjustment import Float64Overwrite
 from zipline.utils.enum import enum
 from zipline.utils.input_validation import (
