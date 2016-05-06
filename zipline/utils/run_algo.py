@@ -18,6 +18,7 @@ from zipline.algorithm import TradingAlgorithm
 from zipline.data.bundles.core import load
 from zipline.data.data_portal import DataPortal
 from zipline.finance.trading import TradingEnvironment
+from zipline.utils.calendars import default_nyse_schedule
 import zipline.utils.paths as pth
 
 
@@ -127,7 +128,7 @@ def _run(handle_data,
             )
         env = TradingEnvironment(asset_db_path=connstr)
         data = DataPortal(
-            env,
+            env, default_nyse_schedule,
             equity_minute_reader=bundle_data.minute_bar_reader,
             equity_daily_reader=bundle_data.daily_bar_reader,
             adjustment_reader=bundle_data.adjustment_reader,
