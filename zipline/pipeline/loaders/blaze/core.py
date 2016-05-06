@@ -322,8 +322,6 @@ def new_dataset(expr, deltas, missing_values):
             )
         except NotPipelineCompatible:
             col = NonPipelineField(name, type_)
-        except TypeError:
-            col = NonNumpyField(name, type_)
         columns[name] = col
 
     name = expr._name
