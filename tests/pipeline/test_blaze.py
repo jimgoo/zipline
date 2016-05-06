@@ -128,7 +128,7 @@ class BlazeToPipelineTestCase(TestCase):
             with self.assertRaises(AttributeError) as e:
                 getattr(ds, field)
             self.assertIn("'%s'" % field, str(e.exception))
-            self.assertIn("'datetime'", str(e.exception))
+            self.assertIn("'datetime64[us]'", str(e.exception))
 
         # test memoization
         self.assertIs(
@@ -254,34 +254,12 @@ class BlazeToPipelineTestCase(TestCase):
             )
         self.assertIn(str(expr), str(e.exception))
 
-    def test_non_numpy_field(self):
-        expr = bz.data(
-            [],
-            dshape="""
-            var * {
-                 a: datetime,
-                 asof_date: datetime,
-                 timestamp: datetime,
-            }""",
-        )
-        ds = from_blaze(
-            expr,
-            loader=self.garbage_loader,
-            no_deltas_rule=no_deltas_rules.ignore,
-        )
-        with self.assertRaises(AttributeError):
-            ds.a
-        self.assertIsInstance(object.__getattribute__(ds, 'a'), NonNumpyField)
-
     def test_non_pipeline_field(self):
-        # NOTE: This test will fail if we ever allow string types in
-        # the Pipeline API. If this happens, change the dtype of the `a` field
-        # of expr to another type we don't allow.
         expr = bz.data(
             [],
             dshape="""
             var * {
-                 a: string,
+                 a: complex,
                  asof_date: datetime,
                  timestamp: datetime,
             }""",
